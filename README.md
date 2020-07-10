@@ -1,1 +1,1 @@
-# ParadigmasDeProgramacion-Haskell
+# ParadigmasDeProgramacion
