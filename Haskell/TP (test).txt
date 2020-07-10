@@ -1,0 +1,64 @@
+*Main> costoDeReparacion autoA
+12500
+*Main> costoDeReparacion autoB
+18000
+*Main> costoDeReparacion autoC
+20000
+*Main> costoDeReparacion autoD
+15000
+
+
+*Main> autoPeligroso autoA
+False
+*Main> autoPeligroso autoB
+True
+
+
+*Main> necesitaRevision autoA
+False
+*Main> necesitaRevision autoB
+True
+
+
+*Main> alfa autoA
+Auto {patente = "AT001LN", desgasteLlantas = [0.5,0.1,0.6,0.4], rpm = 1999, temperaturaAgua = 5, ultimoArreglo = (6,12,2016)}
+*Main> alfa autoB
+Auto {patente = "DJV214", desgasteLlantas = [0.51,0.1,0.6,0.4], rpm = 2000, temperaturaAgua = 5, ultimoArreglo = (6,12,2015)}
+*Main> alfa autoC
+Auto {patente = "DJV215", desgasteLlantas = [0.0,3.0,0.0,5.0], rpm = 2000, temperaturaAgua = 5, ultimoArreglo = (6,12,2014)}
+*Main> alfa autoD
+Auto {patente = "DFH029", desgasteLlantas = [1.0,0.0,2.0,0.0], rpm = 2000, temperaturaAgua = 5, ultimoArreglo = (6,12,2010)}
+
+
+*Main> bravo autoA
+Auto {patente = "AT001LN", desgasteLlantas = [0.0,0.0,0.0,0.0], rpm = 1999, temperaturaAgua = 5, ultimoArreglo = (6,12,2016)}
+*Main> bravo autoB
+Auto {patente = "DJV214", desgasteLlantas = [0.0,0.0,0.0,0.0], rpm = 2000, temperaturaAgua = 5, ultimoArreglo = (6,12,2015)}
+*Main> bravo autoC
+Auto {patente = "DJV215", desgasteLlantas = [0.0,0.0,0.0,0.0], rpm = 3000, temperaturaAgua = 5, ultimoArreglo = (6,12,2014)}
+*Main> bravo autoD
+Auto {patente = "DFH029", desgasteLlantas = [0.0,0.0,0.0,0.0], rpm = 2005, temperaturaAgua = 5, ultimoArreglo = (6,12,2010)}
+
+
+*Main> charly autoA
+Auto {patente = "AT001LN", desgasteLlantas = [0.0,0.0,0.0,0.0], rpm = 1999, temperaturaAgua = 5, ultimoArreglo = (6,12,2016)}
+*Main> charly autoB
+Auto {patente = "DJV214", desgasteLlantas = [0.0,0.0,0.0,0.0], rpm = 2000, temperaturaAgua = 5, ultimoArreglo = (6,12,2015)}
+*Main> charly autoC
+Auto {patente = "DJV215", desgasteLlantas = [0.0,0.0,0.0,0.0], rpm = 2000, temperaturaAgua = 5, ultimoArreglo = (6,12,2014)}
+*Main> charly autoD
+Auto {patente = "DFH029", desgasteLlantas = [0.0,0.0,0.0,0.0], rpm = 2000, temperaturaAgua = 5, ultimoArreglo = (6,12,2010)}
+
+
+*Main> tango autoA
+Auto {patente = "AT001LN", desgasteLlantas = [0.5,0.1,0.6,0.4], rpm = 1999, temperaturaAgua = 5, ultimoArreglo = (6,12,2016)}
+*Main> lima autoA
+Auto {patente = "AT001LN", desgasteLlantas = [0.0,0.0,0.6,0.4], rpm = 1999, temperaturaAgua = 5, ultimoArreglo = (6,12,2016)}
+*Main> lima autoC
+Auto {patente = "DJV215", desgasteLlantas = [0.0,0.0,0.0,5.0], rpm = 3000, temperaturaAgua = 5, ultimoArreglo = (6,12,2014)}
+*Main> zulu autoB
+Auto {patente = "DJV214", desgasteLlantas = [0.0,0.0,0.6,0.4], rpm = 2000, temperaturaAgua = 90, ultimoArreglo = (6,12,2015)}
+*Main> zulu autoD
+Auto {patente = "DFH029", desgasteLlantas = [0.0,0.0,2.0,0.0], rpm = 2005, temperaturaAgua = 90, ultimoArreglo = (6,12,2010)}
+
+

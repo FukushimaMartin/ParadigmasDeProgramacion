@@ -1,0 +1,68 @@
+Punto 4
+
+desgaste de cubiertas [0.1, 0.4, 0.2, 0], [0.2, 0.5, 0.6, 0.1], [0.1, 0.1, 0.1, 0]
+*Main> estanOrdenados [autoA,autoB,autoC]
+True
+desgaste de cubiertas [0.1, 0.4, 0.2, 0], [0.3, 0.5, 0.6, 0.1], [0.1, 0.1, 0.1, 0]
+*Main> estanOrdenados [autoA,autoD,autoC]
+False
+desgaste de cubiertas [0.1, 0.4, 0.2, 0]
+*Main> estanOrdenados [autoA]
+True
+desgaste de cubiertas [0.1, 0.4, 0.2, 0.1]
+*Main> estanOrdenados [autoE]
+False
+
+
+Punto 5
+--creamos 2 tipos de orden a modo de ejemplo para realizar las pruebas
+
+*Main> ordenReparacion autoA orden1
+Auto {patente = "DJV214", desgasteLlantas = [0.0,0.0,0.0,0.0], rpm = 1999, temperaturaAgua = 5, ultimoArreglo = (5,6,20)}
+*Main> ordenReparacion autoA orden2
+Auto {patente = "DJV214", desgasteLlantas = [0.0,0.0,0.2,0.0], rpm = 1999, temperaturaAgua = 90, ultimoArreglo = (12,3,87)}
+*Main> ordenReparacion autoE orden1
+Auto {patente = "DJV215", desgasteLlantas = [0.0,0.0,0.0,0.0], rpm = 2005, temperaturaAgua = 5, ultimoArreglo = (5,6,20)}
+*Main> ordenReparacion autoE orden2
+Auto {patente = "DJV215", desgasteLlantas = [0.0,0.0,0.2,0.1], rpm = 2000, temperaturaAgua = 90, ultimoArreglo = (12,3,87)}
+
+
+Punto 6
+Integrante A
+
+modificamos del autoB el desgaste en la primera cubierta = 0.6
+*Main> mecanicosAcondicionadores autoB [alfa, bravo, charly, tango, zulu, lima]
+[<function>,<function>,<function>,<function>]
+
+modificamos del autoE el desgaste en la primera cubierta = 0.5
+*Main> mecanicosAcondicionadores autoE [alfa, bravo, charly, tango, zulu, lima]
+[<function>,<function>,<function>,<function>,<function>,<function>]
+
+
+
+Integrante B
+
+las patentes son autoA= “DJV214”, autoB = “AT001LN”, autoC “DFH029", autoD “DJV215”
+*Main> costoTotalReparacion [autoA,autoB,autoC,autoD]
+27500
+
+
+Punto 7
+Integrante A
+
+*Main> primerTecnicoOptimo autoC tecnicosInfinitos
+<function>
+
+
+
+--Integrante B
+
+Aplicacion de costoTotalReparacion en una lista infinita
+*Main> costoTotalReparacion autosInfinitos
+El programa no finaliza, dado que se queda iterando infinitamente
+
+Aplicacion de costoTotalReparacion (modificada) en una lista infinita 
+*Main> costoTotalReparacionDeTres autosInfinitos
+45000
+
+
