@@ -60,10 +60,8 @@ visitar atracciones pers = foldl (\pers atraccion -> atraccion pers) pers atracc
 -- Persona {nombre = "Ana", nivelSatisfaccion = 29.0, nivelEmocion = 25.300001, nivelCultura = 72.0}
 
 --Punto 4
-atraccionInventada :: Atraccion
-atraccionInventada = modificaSatisfaccion (+) 190
---ejemplo de invocacion
--- *Main> visitar [montaniaRusa 10 10,caidaLibre 20, mundoMaya, showDeMagia,atraccionInventada] ana
+--aplicamos una atraccion inventada al listado de atracciones anteriores
+-- *Main> visitar [montaniaRusa 10 10,caidaLibre 20, mundoMaya, showDeMagia,modificaSatisfaccion (+) 190] ana
 -- Persona {nombre = "Ana", nivelSatisfaccion = 219.0, nivelEmocion = 25.300001, nivelCultura = 72.0}
 
 
@@ -72,7 +70,7 @@ atraccionInventada = modificaSatisfaccion (+) 190
 estanFelices :: [Persona] -> Bool
 estanFelices personas = all estaSatisfecha (estanEmocionadas(auxiliar personas))
 auxiliar :: [Persona] -> [Persona]
-auxiliar = map ((montaniaRusa 80 10).(mundoMaya))
+auxiliar = map ((mundoMaya).(montaniaRusa 80 10))
 estanEmocionadas :: [Persona] -> [Persona]
 estanEmocionadas = filter ((60<).nivelEmocion)
 estaSatisfecha :: Persona -> Bool
@@ -82,10 +80,13 @@ estaSatisfecha = ((50<).nivelSatisfaccion)
 -- True
 
 --Punto 6
-contenta :: [Atraccion] -> Persona -> Bool
-contenta atracciones = estaContenta.(visitar atracciones)
+contenta :: Persona -> [Atraccion] -> Bool
+contenta pers atracciones = estaContenta.(visitar atracciones) $ pers
 estaContenta :: Persona -> Bool
 estaContenta pers = (200<) (nivelEmocion pers + nivelSatisfaccion pers)
+--contenta ana [showDeMagia,mundoMaya,modificaSatisfaccion (+) 190]
+--True
+
 
 --Punto 7
 -- seccion A
@@ -100,5 +101,5 @@ estaContenta pers = (200<) (nivelEmocion pers + nivelSatisfaccion pers)
 h :: (Persona -> Bool) -> [Persona] -> Persona
 h f xs = (head.filter f) xs
 
--- *Main> h (contenta [showDeMagia,mundoMaya,atraccionInventada]) [ana,juan]
+-- *Main> h (contenta [showDeMagia,mundoMaya,modificaSatisfaccion (+) 190]) [ana,juan]
 -- Persona {nombre = "Ana", nivelSatisfaccion = 10.0, nivelEmocion = 20.0, nivelCultura = 60.0}
