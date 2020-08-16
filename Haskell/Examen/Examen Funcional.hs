@@ -31,7 +31,7 @@ modificaSatisfaccion f num pers = pers{nivelSatisfaccion = f num (nivelSatisfacc
 modificaEmocion :: (Float -> Float -> Float) -> Float -> Persona -> Persona
 modificaEmocion f num pers = pers{nivelEmocion = f num (nivelEmocion pers)}
 modificaCultura :: (Float -> Float -> Float) -> Float -> Persona -> Persona
-modificaCultura f num pers = pers{nivelCultura = f num (nivelEmocion pers)}
+modificaCultura f num pers = pers{nivelCultura = f num (nivelCultura pers)}
 
 montaniaRusa :: Float -> Float -> Atraccion
 montaniaRusa vel alt pers    | vel > 50 = modificaEmocion (+) (vel*0.15+alt) pers
@@ -68,11 +68,11 @@ visitar atracciones pers = foldl (\pers atraccion -> atraccion pers) pers atracc
 
 --Punto 5
 estanFelices :: [Persona] -> Bool
-estanFelices personas = all estaSatisfecha (estanEmocionadas(auxiliar personas))
-auxiliar :: [Persona] -> [Persona]
-auxiliar = map ((mundoMaya).(montaniaRusa 80 10))
-estanEmocionadas :: [Persona] -> [Persona]
-estanEmocionadas = filter ((60<).nivelEmocion)
+estanFelices personas = all estaSatisfecha.filter (estaEmocionada.auxiliar) $ personas
+auxiliar :: Persona -> Persona
+auxiliar = (mundoMaya).(montaniaRusa 80 10)
+estaEmocionada :: Persona -> Bool
+estaEmocionada = ((60<).nivelEmocion)
 estaSatisfecha :: Persona -> Bool
 estaSatisfecha = ((50<).nivelSatisfaccion)
 
