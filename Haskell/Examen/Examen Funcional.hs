@@ -76,6 +76,9 @@ estanEmocionadas = filter ((60<).nivelEmocion)
 estaSatisfecha :: Persona -> Bool
 estaSatisfecha = ((50<).nivelSatisfaccion)
 
+--Sí directamente podes hacer algo así:
+--estanFelices personas = all satisfecha.filter (emocionada.montanaRusa 80 10.mundoMaya) $ personas
+
 -- *Main> estanFelices [ana,juan]
 -- True
 
