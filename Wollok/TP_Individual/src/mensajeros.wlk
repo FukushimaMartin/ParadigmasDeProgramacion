@@ -195,7 +195,7 @@ object mensajeria{
 	}
 	//5
 	method enviarTodosLosPaquetes(){
-		paquetes.map({paquete => self.enviarPaquete(paquete)})
+		paquetes.forEach({paquete => self.enviarPaquete(paquete)})
 	}
 	//6
 	method paquetePendienteMasCaro(){
