@@ -69,17 +69,6 @@ class PaquetuliAzulViteh inherits Paquete{
 }
 
 // mensajeros
-class Mensajero{
-	var property peso
-	var property llamar
-	
-	constructor(_peso,_llamar){
-		peso = _peso
-		llamar = _llamar
-	}
-	
-	method llegar(destino) = destino.pasar(self)
-}
 
 object roberto{
 	var property peso = 0
