@@ -1,0 +1,144 @@
+import barrilete.*
+
+describe "Test"{
+	const lastToninas = new Localidad(name = "Last Toninas",equipajeImprescindible = ["Vacuna Gripal", "Vacuna B", "Necronomicon"],precio = 3500,kmUbicacion = 10)
+	const goodAirs = new Localidad(name = "Good Airs",equipajeImprescindible = ["Cerveza", "Protetor Solar"],precio = 1500, kmUbicacion = 20)
+	const silversSea = new Localidad(name = "Silver Sea",equipajeImprescindible = ["Protector Solar", "Equipo de Buceo"],precio = 1350, kmUbicacion = 30)
+	const garlicsSea = new Localidad(name = "Garlics Sea",equipajeImprescindible = ["Caña de Pescar", "Piloto"],precio = 2500, kmUbicacion = 40)
+
+	const auto = new MedioDeTransporte(cuantoTardaPorKm = 5,cuantoCuestaPorKm = 50)
+	const autobus = new MedioDeTransporte(cuantoTardaPorKm = 10,cuantoCuestaPorKm = 30)
+	const avion = new MedioDeTransporte(cuantoTardaPorKm = 1,cuantoCuestaPorKm = 100)
+
+	const viajePrueba = new Viaje(origen=lastToninas, destino=goodAirs,transporte=auto)
+
+	const pabloHari = new Usuario(nombreUsuario = "pHari", viajes = [], dineroDisponible = 2000,localidadOrigen = lastToninas, equipaje=["Vacuna Gripal", "Vacuna B", "Necronomicon","Cerveza", "Protetor Solar"])
+	const pepita = new Usuario(nombreUsuario = "pepita", viajes = [], dineroDisponible = 0,localidadOrigen = lastToninas, equipaje=["Vacuna Gripal"])
+
+
+	//test sobre destinos
+	test "Un destino con precio mayor a 2000 es destacado"{
+		assert.that(garlicsSea.destinoDestacado())
+	}
+	test "Un destino que contenga como sugerencia una Vacuna, es considerador peligroso"{
+		assert.that(lastToninas.esPeligroso())
+	}
+	test "A un destino le puedo aplicar un descuento en %, a la vez se le adiciona un certificado de descuento"{
+		goodAirs.descuento(10)
+		assert.equals(1350,goodAirs.precio())
+	}
+	test "Un destino con descuento, agrega a su lista de equipaje imprescindible un certificado de descuento"{
+		goodAirs.descuento(10)
+		assert.that(goodAirs.equipajeImprescindible().contains("Certificado de descuento"))
+	}
+	
+	//test sobre empresa
+	test "Si la empresa no tiene destinos asignados, entonces no tiene destinos Destacados:"{
+		assert.equals([],barrilete.destinosDestacados())
+	}
+	test "Si la empresa no tiene destinos asignados, entonces no puede ser considerada extrema"{
+		assert.notThat(barrilete.esExtrema())
+	}
+	test "Una empresa puede agregar destinos"{
+		barrilete.agregarDestino(lastToninas)
+		assert.equals([lastToninas],barrilete.destinos())
+	}
+	test "Una empresa puede mostrar sus destinos destacados, si los tuviera"{
+		barrilete.agregarDestino(lastToninas)
+		barrilete.agregarDestino(goodAirs)
+		assert.equals([lastToninas],barrilete.destinosDestacados())
+	}
+	test "Una empresa puede aplicar descuentos a todos sus destinos, a la vez se le adiciona un certificado de descuento"{
+		barrilete.agregarDestino(lastToninas)
+		barrilete.agregarDestino(goodAirs)
+		barrilete.agregarDestino(silversSea)
+		barrilete.agregarDestino(garlicsSea)
+		barrilete.aplicarDescuentos(10)
+		assert.equals(3150,lastToninas.precio())
+		assert.that(lastToninas.equipajeImprescindible().contains("Certificado de descuento"))
+		assert.equals(1350,goodAirs.precio())
+		assert.that(goodAirs.equipajeImprescindible().contains("Certificado de descuento"))
+		assert.equals(1215,silversSea.precio())
+		assert.that(silversSea.equipajeImprescindible().contains("Certificado de descuento"))
+		assert.equals(2250,garlicsSea.precio())
+		assert.that(garlicsSea.equipajeImprescindible().contains("Certificado de descuento"))
+	}
+	test "Una empresa puede verificar si la misma es extrema, en caso de tener destinos peligrosos"{
+		barrilete.agregarDestino(lastToninas)
+		assert.that(barrilete.esExtrema())
+	}
+	test "Una empresa puede mostrar su carta de destinos"{
+		barrilete.agregarDestino(silversSea)
+		barrilete.agregarDestino(garlicsSea)
+		assert.equals(["Silver Sea", "Garlics Sea"],barrilete.cartaDeDestinos())
+	}
+	test "cuando la empresa arma un viaje, coloca como localidad de origen la del usuario"{
+		barrilete.agregarTransporte(auto)
+		const unViaje = barrilete.armarViaje(pabloHari,goodAirs)
+		assert.equals(lastToninas,unViaje.origen())
+	}
+
+	
+	
+	//test sobre usuarios
+	test "Cuando un usuario realiza un viaje, se le resta el precio del mismo a su saldo disponible"{
+		barrilete.agregarTransporte(auto)
+		pabloHari.viajarA(goodAirs)
+		assert.equals(0,pabloHari.dineroDisponible())
+	}
+	test "Cuando un usuario realiza un viaje, se le adiciona el mismo en su listado de viajes"{
+		barrilete.agregarTransporte(auto)
+		pabloHari.viajarA(goodAirs)
+		assert.equals(goodAirs,pabloHari.viajes().first().destino())
+	}
+	test "Cuando un usuario realiza un viaje, actualiza su localidad de origen por el destino al que viajó"{
+		barrilete.agregarTransporte(auto)
+		pabloHari.viajarA(goodAirs)
+		assert.equals(goodAirs,pabloHari.localidadOrigen())
+	}
+	test "Un usuario no puede realizar un viaje si no dispone del dinero suficiente para pagarlo"{
+		barrilete.agregarTransporte(auto)
+		assert.throwsExceptionWithMessage("Saldo insuficiente", {pabloHari.viajarA(garlicsSea)})
+	}
+	test "Un usuario no puede realizar un viaje si no dispone del equipaje imprescindible"{
+		barrilete.agregarTransporte(auto)
+		pabloHari.dineroDisponible(4000)
+		assert.throwsExceptionWithMessage("no posee el equipaje imprescindible para viajar", {pabloHari.viajarA(garlicsSea)})
+	}
+	
+	test "Un usuario puede seguir a otro usuario"{
+		pabloHari.seguirUsuario(pepita)
+		assert.equals(#{pepita},pabloHari.listaSeguidos())
+	}
+	test "Si el usuario A empieza a seguir al usuario B, entonces B tambien empieza a seguir a A"{
+		pabloHari.seguirUsuario(pepita)
+		assert.equals(#{pabloHari},pepita.listaSeguidos())
+	}
+	
+	test "calcular los kms de usuario"{
+		barrilete.agregarTransporte(auto)
+		pabloHari.viajarA(goodAirs)
+		assert.equals(10,pabloHari.kmsUsuario())
+	}
+	test "calcular los kms de un usuario con varios viajes realizados"{
+		barrilete.agregarTransporte(auto)
+		pabloHari.viajarA(goodAirs)
+		pabloHari.dineroDisponible(4000)
+		pabloHari.equipaje().add("Protector Solar")
+		pabloHari.equipaje().add("Equipo de Buceo")
+		pabloHari.viajarA(silversSea)
+		assert.equals(20,pabloHari.kmsUsuario())
+	}
+
+	//Test distancia entre localidades
+	test "calcular la distancia de un destino a otro"{
+		assert.equals(10,lastToninas.distanciaA(goodAirs))
+	}
+	
+	//Test sobre Viaje
+	test "calcular precio de un viaje"{
+		assert.equals(2000,viajePrueba.precio())
+	}
+
+	
+}
