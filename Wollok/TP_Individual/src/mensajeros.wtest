@@ -1,0 +1,218 @@
+import mensajeros.*
+
+describe "Test"{
+
+	test "1.1- roberto (90kg) puede llevar un paquete que está pago en un camión que tiene un acoplado" {
+		roberto.peso(90)
+		paquete.pago(true)
+		paquete.destino(puenteBrooklyn)
+		camion.acoplados(1)
+		roberto.viajaEn(camion)
+		assert.that(paquete.puedeSerEntregadoPor(roberto))
+	}
+
+	test "1.2- neo con crédito no puede llevar un paquete que no está pago a la matrix"{
+		paquete.destino(laMatrix)
+		neo.cargarCredito(10)
+		assert.notThat(paquete.puedeSerEntregadoPor(neo))
+	}
+	
+	test "1.3- un mensajero puede pasar por el puente Brooklyn si su peso es menor a 1 tonelada"{
+		roberto.peso(60)
+		camion.acoplados(1)
+		roberto.viajaEn(camion)
+		assert.that(puenteBrooklyn.puedePasar(roberto))
+	}
+	
+	test "1.4- un mensajero puede pasar por la matrix si es que puede llamar a alguien"{
+		neo.cargarCredito(10)
+		assert.that(laMatrix.puedePasar(neo))
+	}
+	test "si un mensajer no puede llamar a alguien, entonces no puede pasar por la matrix"{
+		assert.notThat(laMatrix.puedePasar(roberto))
+	}
+	test "un camion cambia de peso segun la cantidad de acoplados"{
+		camion.acoplados(2)
+		assert.equals(1000,camion.peso())
+	}
+	test "el peso de roberto se ajusta a su transporte"{
+		roberto.peso(60)
+		roberto.viajaEn(camion)
+		camion.acoplados(2)
+		assert.equals(1060,roberto.peso())
+	}
+	test "chuck norris puede pasar por la matrix"{
+		assert.that(laMatrix.puedePasar(chuckNorris))
+	}
+	test "chuck norris puede pasar por el puente brooklyn"{
+		assert.that(puenteBrooklyn.puedePasar(chuckNorris))
+	}
+
+	
+// segunda parte
+
+	test "la mensajeria puede contratar mensajeros"{
+		mensajeria.contratar(roberto)
+		mensajeria.contratar(neo)
+		assert.equals([roberto,neo],mensajeria.mensajeros())
+	}
+	test "la mensajeria puede despedir a un mensajero"{
+		mensajeria.contratar(chuckNorris)
+		mensajeria.contratar(neo)
+		mensajeria.despedir(chuckNorris)
+		assert.equals([neo],mensajeria.mensajeros())
+	}
+	test "la mensajeria puede despedir a todos sus mensajeros"{
+		mensajeria.contratar(chuckNorris)
+		mensajeria.contratar(neo)
+		mensajeria.despedirATodos()
+		assert.equals([],mensajeria.mensajeros())
+	}
+	test "una mensajeria con mas de 2 mensajeros es grande"{
+		mensajeria.contratar(roberto)
+		mensajeria.contratar(neo)
+		mensajeria.contratar(chuckNorris)
+		assert.that(mensajeria.esGrande())
+	}
+	test "el primer mensajero puede entregar el paquete"{
+		mensajeria.contratar(chuckNorris)
+		mensajeria.contratar(neo)
+		paquete.destino(laMatrix)
+		paquete.pago(true)
+		assert.that(mensajeria.entregaElPrimero(paquete))
+	}
+	test "saber el peso del ultimo mensajero contratado"{
+		mensajeria.contratar(neo)
+		mensajeria.contratar(chuckNorris)
+		assert.equals(900,mensajeria.elPesoDelUltimo())
+	}
+	test "el paqueton viajero calcula su precio segun la cantidad de destinos"{
+		paquetonViajero.destinos().add(laMatrix)
+		paquetonViajero.destinos().add(puenteBrooklyn)
+		assert.equals(200,paquetonViajero.precio())
+	}
+	test "el paqueton viajero se puede pagar en partes"{
+		paquetonViajero.destinos().add(laMatrix)
+		paquetonViajero.destinos().add(puenteBrooklyn)
+		paquetonViajero.pagar(10)
+		paquetonViajero.pagar(40)
+		paquetonViajero.pagar(150)
+		assert.that(paquetonViajero.pago())
+	}
+	test "el paqueton viajero, pago y con destinos a laMatrix y puenteBrooklyn, puede ser entregado por Chuck Norris"{
+		paquetonViajero.destinos().add(laMatrix)
+		paquetonViajero.destinos().add(puenteBrooklyn)
+		paquetonViajero.pagar(200)
+		assert.that(paquetonViajero.puedeSerEntregadoPor(chuckNorris))
+	}
+	test "el paqueton viajero puede ser entregado por mensajeros en la mensajeria"{
+		paquetonViajero.destinos().add(laMatrix)
+		paquetonViajero.destinos().add(puenteBrooklyn)
+		paquetonViajero.pagar(200)
+		mensajeria.contratar(roberto)
+		mensajeria.contratar(neo)
+		mensajeria.contratar(chuckNorris)
+		assert.equals([chuckNorris],mensajeria.puedenLlevarPaquete(paquetonViajero))
+	}
+	test "la mensjeria puede enviar el paqueton viajero"{
+		paquetonViajero.destinos().add(laMatrix)
+		paquetonViajero.destinos().add(puenteBrooklyn)
+		paquetonViajero.pagar(200)
+		mensajeria.contratar(chuckNorris)
+		mensajeria.enviarPaquete(paquetonViajero)
+		assert.equals([],mensajeria.paquetesPendientes())
+	}
+	
+	
+	test "2.1- Al menos un mensajero de la empresa puede entregar el paquete"{
+		paquete.destino(laMatrix)
+		paquete.pago(true)
+		mensajeria.contratar(chuckNorris)
+		mensajeria.contratar(roberto)
+		assert.that(mensajeria.algunoEntrega(paquete))
+	}
+	test "2.3- la mensajeria 'Los Gordetes' tiene sobrepeso"{
+		mensajeria.contratar(chuckNorris)
+		mensajeria.contratar(neo)
+		roberto.viajaEn(camion)
+		camion.acoplados(4)
+		mensajeria.contratar(roberto)
+		assert.that(mensajeria.sobrepeso())
+	}
+	test "2.2- obtener todos los mensajeros que pueden llevar un paquete"{
+		mensajeria.contratar(neo)
+		neo.cargarCredito(10)
+		mensajeria.contratar(chuckNorris)
+		paquete.destino(laMatrix)
+		paquete.pago(true)
+		mensajeria.contratar(roberto)
+		roberto.viajaEn(bici)
+		assert.equals([neo,chuckNorris],mensajeria.puedenLlevarPaquete(paquete))
+	}
+	
+	test "2.4- si la mensajeria no puede enviar el paquete, lo coloca en la lista de pendientes"{
+		mensajeria.contratar(neo)
+		mensajeria.contratar(chuckNorris)
+		paquete.destino(laMatrix)
+		paquetito.destino(laMatrix)
+		mensajeria.enviarTodosLosPaquetes([paquete,paquetito])
+		assert.equals([paquete],mensajeria.paquetesPendientes())
+	}
+	
+	test"2.5- si la mensajeria puede enviar todos los paquetes, no coloca ninguno en pendientes"{
+		mensajeria.contratar(neo)
+		mensajeria.contratar(chuckNorris)
+		paquete.destino(laMatrix)
+		paquetito.destino(laMatrix)
+		paquete.pago(true)
+		mensajeria.enviarTodosLosPaquetes([paquete,paquetito])
+		assert.equals([],mensajeria.paquetesPendientes())
+	}
+	test"2.5- la mensajeria envia todos los paquetes que puede y manda a Pendientes los que no"{
+		mensajeria.contratar(neo)
+		mensajeria.contratar(chuckNorris)
+		paquete.destino(laMatrix)
+		paquetito.destino(laMatrix)
+		mensajeria.enviarTodosLosPaquetes([paquete,paquetito])
+		assert.equals([paquete],mensajeria.paquetesPendientes())
+	}
+
+	test"2.6- la mensajeria puede detectar el paquete mas caro pendiente, y si puede lo envia"{
+		mensajeria.contratar(neo)
+		mensajeria.contratar(chuckNorris)
+		paquete.destino(laMatrix)
+		paquetito.destino(laMatrix)
+		paquete.pago(false)
+		mensajeria.enviarTodosLosPaquetes([paquete,paquetito])
+		//primero intentamos enviar los paquetes para que deje el paquete comun en los pendientes
+		//luego lo pagamos, para que al calcular el mas caro pueda enviarlo.
+		paquete.pago(true)
+		mensajeria.enviarPaquetePendienteMasCaro()
+		assert.equals([],mensajeria.paquetesPendientes())
+	}
+
+	test"2.8- el viejo sin chaleco no entrega nada"{
+		mensajeria.contratar(elViejoDeLocoArts)
+		paquetuliAzulViteh.pagar(1000)
+		paquete.destino(laMatrix)
+		paquetito.destino(laMatrix)
+		mensajeria.enviarPaquete(paquetuliAzulViteh)
+		assert.equals([paquetuliAzulViteh],mensajeria.paquetesPendientes())
+	}
+	test"2.8- el viejo con chaleco entrega el paquete viteh en la matrix"{
+		elViejoDeLocoArts.teneChalecoViteh()
+		assert.that(laMatrix.puedePasar(elViejoDeLocoArts))
+	}
+	test"el viejo puede entregar el paquetuli azul"{
+		elViejoDeLocoArts.teneChalecoViteh()
+		paquetuliAzulViteh.pagar(1000)
+		assert.that(paquetuliAzulViteh.puedeSerEntregadoPor(elViejoDeLocoArts))
+		
+	}
+	test"2.8- el paquetuli sabe a donde va"{
+		assert.equals("hasta la matri viteh",paquetuliAzulViteh.hastaDondeVa())		
+	}
+	test"2.8- al elViejoDeLocoArts no le gustan los gatos"{
+		assert.equals("Es false viteh, ese es Alf, a mi me gustan lo chaleco viteh",elViejoDeLocoArts.teGustanLosGatos())		
+	}
+}

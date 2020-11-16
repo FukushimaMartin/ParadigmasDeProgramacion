@@ -1,62 +1,46 @@
 // paquetes
-class Paquete{
+
+object paquete{
 	var property destino
-	var property pago
-	var property precio
-	
-	constructor(_destino,_pago,_precio){
-		destino = _destino
-		pago = _pago
-		precio = _precio
-	}
-	constructor(_pago){
-		pago = _pago
-	}
-	
+	var property pago = false
+	const property precio = 50
+
+
 	method puedeSerEntregadoPor(mensajero) {
-		return mensajero.llegar(destino) and self.pago()
+		return destino.puedePasar(mensajero) and self.pago()
 	}
 }
 
-class PaqueteOriginal inherits Paquete{
-	
-	constructor(_destino) = super(_destino,false,50){
-		destino = _destino
-	}
+object paquetito{
+	var property destino
+	const property precio = 0
+	const property pago = true
 
+	method puedeSerEntregadoPor(mensajero) = true
 }
-class Paquetito inherits Paquete{
-	
-	constructor(_destino) = super(_destino,true,0){
-		destino = _destino
-	}
 
-	override method puedeSerEntregadoPor(mensajero) = true
-}
-class PaquetonViajero inherits Paquete{
+object paquetonViajero{
 	const property destinos = []
-	var property pagar = 0
-	
-	constructor(_destinos) = super(false){
-		destinos = _destinos
-	}
-	
-	override method precio(){
+	var property importePagado = 0
+
+	method precio(){
 		return destinos.size() * 100
 	}
 	method pagar(valor){
-		pagar += valor
+		importePagado += valor
 	}
-	override method pago(){
-		return pagar >= self.precio()
+	method pago(){
+		return importePagado >= self.precio()
 	}
-	override method puedeSerEntregadoPor(mensajero) {
-		return destinos.all({destino => mensajero.llegar(destino)}) and self.pago()
+	method puedeSerEntregadoPor(mensajero) {
+		return destinos.all({destino => destino.puedePasar(mensajero)}) and self.pago()
 	}
-	
+
 }
-class PaquetuliAzulViteh inherits Paquete{	
-	constructor() = super(laMatrix,false,500)
+object paquetuliAzulViteh{
+	const property destino = laMatrix
+	var property pago = false
+	var property precio = 500
 	
 	method pagar(valor){
 		if (valor >= precio){
@@ -65,6 +49,9 @@ class PaquetuliAzulViteh inherits Paquete{
 	}
 	method hastaDondeVa(){
 		return "hasta la matri viteh"
+	}
+	method puedeSerEntregadoPor(mensajero) {
+		return destino.puedePasar(mensajero) and self.pago()
 	}
 }
 
@@ -78,26 +65,23 @@ object roberto{
 		transporte = movil
 	}
 	method peso() = peso + transporte.peso()
-	method llegar(destino) = destino.pasar(self)
-	method llamar() = false
+	method puedeLlamar() = false
 }
 
 object chuckNorris{
-	var property peso = 900
+	const property peso = 900
 	
-	method llamar() = true
-	method llegar(destino) = destino.pasar(self)
+	method puedeLlamar() = true
 }
 
 object neo{
 	const property peso = 0
 	var credito = 0
 	
-	method llamar() = credito > 0
+	method puedeLlamar() = credito > 0
 	method cargarCredito(cantidad) {
 		credito = cantidad
 	}
-	method llegar(destino) = destino.pasar(self)
 	
 }
 object elViejoDeLocoArts{
@@ -107,22 +91,21 @@ object elViejoDeLocoArts{
 	method teneChalecoViteh(){
 		chaleco = true
 	}
-	method llamar(){
+	method puedeLlamar(){
 		return chaleco
 	}
 	method teGustanLosGatos(){
 		return "Es false viteh, ese es Alf, a mi me gustan lo chaleco viteh"
 	}
-	method llegar(destino) = destino.pasar(self)
 }
 
 // destinos
 object puenteBrooklyn{
-	method pasar(alguien) = alguien.peso() < 1000
+	method puedePasar(mensajero) = mensajero.peso() < 1000
 }
 
 object laMatrix{
-	method pasar(alguien) = alguien.llamar()
+	method puedePasar(mensajero) = mensajero.puedeLlamar()
 }
 
 // transportes
@@ -139,7 +122,6 @@ object camion{
 object mensajeria{
 	const property mensajeros = []
 	const property paquetesPendientes = []
-	const property paquetes = []
 
 	
 	method contratar(alguien){
@@ -149,7 +131,7 @@ object mensajeria{
 		mensajeros.remove(alguien)
 	}
 	method despedirATodos(){
-		mensajeros.removeAll(self.mensajeros())
+		mensajeros.clear()
 	}
 	method esGrande() = mensajeros.size() > 2
 	
@@ -173,32 +155,22 @@ object mensajeria{
 	}
 	//4
 	method enviarPaquete(paquete){
-		
-		if (self.puedenLlevarPaquete(paquete) == []){
+		if (!self.algunoEntrega(paquete)){
 			paquetesPendientes.add(paquete)
-			paquetes.remove(paquete)
-		} else {
-			(self.puedenLlevarPaquete(paquete)).anyOne()
-			paquetes.remove(paquete)
 		}
 	}
 	//5
-	method enviarTodosLosPaquetes(){
+	method enviarTodosLosPaquetes(paquetes){
 		paquetes.forEach({paquete => self.enviarPaquete(paquete)})
 	}
 	//6
-	method paquetePendienteMasCaro(){
+	method enviarPaquetePendienteMasCaro(){
 		var paquete
 		paquete = paquetesPendientes.max({paquete=>paquete.precio()})
-		if (self.puedenLlevarPaquete(paquete) != []){
-			self.agregarPaquete(paquete)
+		if (self.algunoEntrega(paquete)){
 			paquetesPendientes.remove(paquete)
 			self.enviarPaquete(paquete)
 		}
-		return paquete
-	}
-	method agregarPaquete(paquete){
-		paquetes.add(paquete)
 	}	
 	
 }
