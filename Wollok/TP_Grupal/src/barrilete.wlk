@@ -83,7 +83,7 @@ class Usuario{
 	}
 	
 	method kmsUsuario() {
-		return viajes.sum({viaje => viaje.origen().distanciaA(viaje.destino())})
+		return viajes.sum({viaje => viaje.kmViaje()})
 	}
 	
 	method seguirUsuario(usuario) {
@@ -100,11 +100,15 @@ class MedioDeTransporte{
 }
 
 class Viaje{
-	var property origen
-	var property destino
-	var property transporte
+	const property origen
+	const property destino
+	const property transporte
 	
 	method precio(){
 		return transporte.cuantoCuestaPorKm() * origen.distanciaA(destino) + destino.precio()
 	}
+	method kmViaje(){
+		return origen.distanciaA(destino)
+	}
+
 }
